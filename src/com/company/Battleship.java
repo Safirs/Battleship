@@ -1,8 +1,15 @@
 package com.company;
 
-public class Battleship {
+import java.awt.*;
+import java.util.Scanner;
 
+public class Battleship {
     public static void main(String[] args) {
         Background.makeGrid();
+
+        Background.userShipPlacement();
+
+
     }
+
 }
