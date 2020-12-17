@@ -3,8 +3,8 @@ package com.company;
 import java.util.Scanner;
 
 public class Background {
-    public static int rows = 10;
-    public static int colums = 10;
+    public static int rows = 11;
+    public static int colums = 11;
     public static String[][] grid = new String[rows][colums];
     private static String[] ships = {"CARRIER", "BATTLE SHIP", "CRUISER", "SUBMARINE", "DESTROYER"};
     private static int[] shipLenght = {5, 4, 3, 2, 1};
@@ -16,21 +16,21 @@ public class Background {
         System.out.println("                OCEAN MAP                 ");
         System.out.println();
         System.out.print("    ");
-        for (int i = 1; i <= colums; i++) {
+        for (int i = 1; i < colums; i++) {
             System.out.print(i + "   ");
         }
         System.out.println();
         System.out.print("  +---+---+---+---+---+---+---+---+---+---+");
         System.out.println();
-        for (int i = 0; i < grid.length; i++) {
-            if (i == 9) {
-                System.out.print(i + 1);
+        for (int i = 1; i < grid.length; i++) {
+            if (i == 10) {
+                System.out.print(i);
             } else {
-                System.out.print(" " + (i + 1));
+                System.out.print(" " + (i));
             }
-            for (int j = 0; j < grid.length; j++) {
+            for (int j = 1; j < grid.length; j++) {
                 grid[i][j] = " ";
-                if (j == 9) {
+                if (j == 10) {
                     System.out.print("| " + grid[i][j] + " |");
                 } else {
                     System.out.print("| " + grid[i][j] + " ");
@@ -52,12 +52,14 @@ public class Background {
     public static void userShipPlacement() {
         System.out.println("Lets place the ships on to the ocean map");;
         for (int i = 0; i < ships.length; i++) {
-            System.out.println(ships[i] + ": lenght " + shipLenght[i]);
-            startCoordinate();
-            endCoordinate();
-            placeShip();
-            printMap();
+            for (int j = 0; j < shipLenght[shipLenght.length - 1 - i]; j++){
+                System.out.println(ships[i] + ": lenght " + shipLenght[i]);
+                startCoordinate();
+                endCoordinate(shipLenght[i]);
+                placeShip();
+                printMap();
             }
+        }
         }
 
     private static void printMap() {
@@ -65,32 +67,32 @@ public class Background {
         System.out.println("                OCEAN MAP                 ");
         System.out.println();
         System.out.print("    ");
-        for (int i = 1; i <= colums; i++) {
+        for (int i = 1; i < colums; i++) {
             System.out.print(i + "   ");
         }
         System.out.println();
         System.out.print("  +---+---+---+---+---+---+---+---+---+---+");
         System.out.println();
-        for (int i = 0; i < grid.length; i++) {
-            if (i == 9) {
-                System.out.print(i + 1);
+        for (int i = 1; i < grid.length; i++) {
+            if (i == 10) {
+                System.out.print(i);
             } else {
-                System.out.print(" " + (i + 1));
+                System.out.print(" " + (i));
             }
-            for (int j = 0; j < grid.length; j++) {
-                if (j == 9) {
-                    if ((grid[i][j]).equals("8")){
-                        System.out.print("|    |");
+            for (int j = 1; j < grid.length; j++) {
+                if (j == 10) {
+                    if ((grid[j][i]).equals("8")){
+                        System.out.print("|   |");
                     }
                     else{
-                        System.out.print("| " + grid[i][j] + " |");
+                        System.out.print("| " + grid[j][i] + " |");
                     }
                 } else {
-                    if ((grid[i][j]).equals("8")){
-                        System.out.print("|    |");
+                    if ((grid[j][i]).equals("8")){
+                        System.out.print("|   ");
                     }
                     else {
-                        System.out.print("| " + grid[i][j] + " ");
+                        System.out.print("| " + grid[j][i] + " ");
                     }
                 }
             }
@@ -178,17 +180,22 @@ public class Background {
             }
             }
 
-    private static void endCoordinate() {
+    private static void endCoordinate(int lenghtOfShip) {
         while (true) {
             System.out.println("End x and y coardinates: ");
             Scanner input = new Scanner(System.in);
             x2 = input.nextInt();
             y2 = input.nextInt();
             System.out.println();
-            if (y1 == y2 && x2 - x1 == shipLenght - 1)
             if (x2 > 0 && y2 > 0 && x2 <= grid.length && y2 <= grid.length) {
                 if (x2 == x1 || y2 == y1) {
-                    if (!(grid[x2][y2]).equals(" ")) {
+                    if (y1 == y2 && Math.abs(x2 - x1) != (lenghtOfShip - 1)){
+                        System.out.println("ERORR - doesn't match the specified lenght! Lenght : " + lenghtOfShip);
+                    }
+                    else if ( x1 == x2 && Math.abs(y2 - y1) != (lenghtOfShip -1)){
+                        System.out.println("ERORR - doesn't match the specified lenght! Lenght : " + lenghtOfShip);
+                    }
+                    else if (!(grid[x2][y2]).equals(" ")) {
                         if ((grid[x2][y2]).equals("8")){
                             System.out.println("ERORR - Too close to ship already placed on the map!");
                         }
@@ -237,6 +244,5 @@ public class Background {
                 System.out.println("ERORR - coardinate input out of bounds!");
             }
         }
-
     }
 }
