@@ -10,6 +10,8 @@ public class Background {
     private static int[] shipLenght = {5, 4, 3, 2, 1};
     private static int x1, x2, y1, y2;
     private static String placement;
+    public static int computerShips;
+
 
     public static void makeGrid() {
         System.out.println();
@@ -47,7 +49,23 @@ public class Background {
     // Vai vinas ir rámja ietvaros?
     // un vai nav párak tuvu kádam kugim
     // Vai ir atbilstoš garums?
+    public static void deployComputerShips(){
 
+        //Deploying five ships for computer
+        Background.computerShips = 5;
+        for (int i = 1; i <= Background.computerShips; ) {
+            int x = (int)(Math.random() * 10);
+            int y = (int)(Math.random() * 10);
+
+            if((x >= 0 && x < rows) && (y >= 0 && y < colums) && (grid[x][y] == " "))
+            {
+                grid[x][y] =   "x";
+
+                i++;
+            }
+        }
+        printMap();
+    }
 
     public static void userShipPlacement() {
         System.out.println("Lets place the ships on to the ocean map");;
@@ -245,4 +263,5 @@ public class Background {
             }
         }
     }
+
 }
