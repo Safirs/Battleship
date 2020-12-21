@@ -1,36 +1,40 @@
 package com.company;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class Background {
-    public static int rows = 11;
-    public static int colums = 11;
+    public static int rows = 10;
+    public static int colums = 10;
     public static String[][] grid = new String[rows][colums];
+    public static String[][] gridComputer = new String[rows][colums];
     private static String[] ships = {"CARRIER", "BATTLE SHIP", "CRUISER", "SUBMARINE", "DESTROYER"};
     private static int[] shipLenght = {5, 4, 3, 2, 1};
     private static int x1, x2, y1, y2;
     private static String placement;
+    private static Scanner input = new Scanner(System.in);
+    private static int hitPlayer, hitUser;
 
     public static void makeGrid() {
         System.out.println();
         System.out.println("                OCEAN MAP                 ");
         System.out.println();
         System.out.print("    ");
-        for (int i = 1; i < colums; i++) {
+        for (int i = 1; i <= colums; i++) {
             System.out.print(i + "   ");
         }
         System.out.println();
         System.out.print("  +---+---+---+---+---+---+---+---+---+---+");
         System.out.println();
-        for (int i = 1; i < grid.length; i++) {
-            if (i == 10) {
-                System.out.print(i);
+        for (int i = 0; i < grid.length; i++) {
+            if (i == 9) {
+                System.out.print(i + 1);
             } else {
-                System.out.print(" " + (i));
+                System.out.print(" " + (i + 1));
             }
-            for (int j = 1; j < grid.length; j++) {
+            for (int j = 0; j < grid.length; j++) {
                 grid[i][j] = " ";
-                if (j == 10) {
+                if (j == 9) {
                     System.out.print("| " + grid[i][j] + " |");
                 } else {
                     System.out.print("| " + grid[i][j] + " ");
@@ -62,40 +66,144 @@ public class Background {
         }
         }
 
-    private static void printMap() {
+        public static void computerShipPlacement() {
+            for (int i = 0; i < ships.length; i++) {
+                for (int j = 0; j < shipLenght[shipLenght.length - 1 - i]; j++) {
+                    coordinateRandom();
+                    placeShip();
+                }
+            }
+        }
+
+    private static void coordinateRandom() {
+
+    }
+
+    public static void playGame(){
+        while(true) {
+            userTurn();
+            computerTurn();
+            if (hitPlayer == 35){
+                System.out.println("CONGRATULATIONS, YOU HAVE SHOT ALL OF THE ENEMIES SHIPS! \n IT'S A WIN");
+                break;
+            }
+            else if (hitUser == 35){
+                System.out.println("GAME OVER - ENEMIE HAVE SHOT ALL YOUR SHIPS! \\n IT'S A LOSE! ");
+                break;
+            }
+        }
+        }
+
+    private static void computerTurn() {
+        int x = (int)(Math.random() * 9);
+        int y = (int)(Math.random() * 9);
+        if (grid[x][y].equals("X")){
+            grid[x][y] = "-";
+            hitPlayer++;
+        }
+        else {
+            gridComputer[x][y] = "*";
+        }
+        printMap();
+    }
+
+    private static void userTurn() {
+        System.out.println("LET'S START THE BATTLE");
+        System.out.println("Enter (X,Y) coordinates where you are aiming: ");
+        int x = input.nextInt() - 1;
+        int y = input.nextInt() - 1;
+        if (gridComputer[x][y].equals("X")){
+            System.out.println("THE TARGET IS HIT!");
+            gridComputer[x][y] = "S";
+            hitUser++;
+        }
+        else {
+            System.out.println("IT'S AN EMPTY SHOT!");
+            gridComputer[x][y] = "*";
+        }
+        printEnemyGrid();
+    }
+
+
+    // METHOD FOR COMPUTER GRID PRINT OUT
+    // IT PRINTS OUT ONLY THE XY WHERE USER SHOT
+
+    private static void printEnemyGrid() {
         System.out.println();
         System.out.println("                OCEAN MAP                 ");
         System.out.println();
         System.out.print("    ");
-        for (int i = 1; i < colums; i++) {
+        for (int i = 1; i <= colums; i++) {
             System.out.print(i + "   ");
         }
         System.out.println();
         System.out.print("  +---+---+---+---+---+---+---+---+---+---+");
         System.out.println();
-        for (int i = 1; i < grid.length; i++) {
-            if (i == 10) {
-                System.out.print(i);
+        for (int i = 0; i < grid.length; i++) {
+            if (i == 9) {
+                System.out.print(i + 1);
             } else {
-                System.out.print(" " + (i));
+                System.out.print(" " + (i + 1));
             }
-            for (int j = 1; j < grid.length; j++) {
-                if (j == 10) {
-                    if ((grid[j][i]).equals("8")){
-                        System.out.print("|   |");
+            for (int j = 0; j < grid.length; j++) {
+                if (j == 9) {
+                    if (grid[j][i].equals("S")) {
+                        System.out.print("| X |"); /// PRINTS X NOT S JUST FOR THE SAKE OF NOT MAKING THINGS MORE MESSIER
                     }
-                    else{
+                    else {
                         System.out.print("| " + grid[j][i] + " |");
                     }
-                } else {
-                    if ((grid[j][i]).equals("8")){
-                        System.out.print("|   ");
+                }
+                else {
+                    if (grid[j][i].equals("S")) {
+                        System.out.print("| X ");
                     }
                     else {
                         System.out.print("| " + grid[j][i] + " ");
                     }
                 }
             }
+            System.out.println();
+            System.out.print("  +---+---+---+---+---+---+---+---+---+---+");
+            System.out.println();
+        }
+    }
+
+    private static void printMap() {
+        System.out.println();
+        System.out.println("                OCEAN MAP                 ");
+        System.out.println();
+        System.out.print("    ");
+        for (int i = 1; i <= colums; i++) {
+            System.out.print(i + "   ");
+        }
+        System.out.println();
+        System.out.print("  +---+---+---+---+---+---+---+---+---+---+");
+        System.out.println();
+        for (int i = 0; i < grid.length; i++) {
+            if (i == 9) {
+                System.out.print(i + 1);
+            } else {
+                System.out.print(" " + (i + 1));
+            }
+            for (int j = 0; j < grid.length; j++) {
+                if (j == 9) {
+                    //if ((grid[j][i]).equals("8")){
+                        //System.out.print("|   |");
+                   // }
+                   // else{
+                        System.out.print("| " + grid[j][i] + " |");
+                    }
+               // }
+                else {
+                  //  if ((grid[j][i]).equals("8")){
+                       // System.out.print("|   ");
+                  //  }
+                  //  else {
+                        System.out.print("| " + grid[j][i] + " ");
+                    }
+                }
+           // }
             System.out.println();
             System.out.print("  +---+---+---+---+---+---+---+---+---+---+");
             System.out.println();
@@ -115,7 +223,7 @@ public class Background {
             }
             for (int i = 0; i < to; i++){
                 grid[x1][from + i] = "X";
-                if(x1 < grid.length) {
+                if(x1 < grid.length - 1) {
                     grid[x1 + 1][from + i] = "8";
                 }
                 if (x1 > 0){
@@ -127,16 +235,16 @@ public class Background {
                 if (y1 > 0) {
                     grid[x1 - 1][from - 1] = "8";
                 }
-                if(y1 < grid.length) {
+                if(y1 < grid.length - 1) {
                     grid[x1 + 1][from - 1] = "8";
                 }
             }
-            if (to < grid.length) {
+            if (to < grid.length - 1) {
                 grid[x1][to + 1] = "8";
                 if (y1 > 0) {
                     grid[x1 - 1][to + 1] = "8";
                 }
-                if (y1 < grid.length) {
+                if (y1 < grid.length - 1) {
                     grid[x1 + 1][to + 1] = "8";
                 }
             }
@@ -152,7 +260,7 @@ public class Background {
             }
             for (int i = 0; i < to; i++){
                 grid[from + i][y1] = "X";
-                if(y1 < grid.length) {
+                if(y1 < grid.length - 1) {
                     grid[from + i][y1 + 1] = "8";
                 }
                 if (y1 > 0){
@@ -164,17 +272,17 @@ public class Background {
                 if (y1 > 0) {
                     grid[from - 1][y1 - 1] = "8";
                 }
-                if (y1 < grid.length) {
+                if (y1 < grid.length - 1) {
                     grid[from - 1][y1 + 1] = "8";
                 }
             }
-            if (to < grid.length) {
+            if (to < grid.length - 1) {
                 grid[to + 1][y1] = "8";
                 if(y1 > 0) {
                     grid[to + 1][y1 - 1] = "8";
                 }
-                if (y1 < 0) {
-                    grid[to + 1][y1 - 1] = "8";
+                if (y1 < grid.length - 1) {
+                    grid[to + 1][y1 + 1] = "8";
                 }
             }
             }
@@ -183,11 +291,10 @@ public class Background {
     private static void endCoordinate(int lenghtOfShip) {
         while (true) {
             System.out.println("End x and y coardinates: ");
-            Scanner input = new Scanner(System.in);
-            x2 = input.nextInt();
-            y2 = input.nextInt();
+            x2 = input.nextInt() - 1;
+            y2 = input.nextInt() - 1;
             System.out.println();
-            if (x2 > 0 && y2 > 0 && x2 <= grid.length && y2 <= grid.length) {
+            if (x2 >= 0 && y2 >= 0 && x2 < grid.length && y2 < grid.length) {
                 if (x2 == x1 || y2 == y1) {
                     if (y1 == y2 && Math.abs(x2 - x1) != (lenghtOfShip - 1)){
                         System.out.println("ERORR - doesn't match the specified lenght! Lenght : " + lenghtOfShip);
@@ -222,11 +329,10 @@ public class Background {
     private static void startCoordinate() {
         while (true) {
             System.out.println("Start x and y coardinates: ");
-            Scanner input = new Scanner(System.in);
-            x1 = input.nextInt();
-            y1 = input.nextInt();
+            x1 = input.nextInt() - 1;
+            y1 = input.nextInt() - 1;
             System.out.println();
-            if (x1 > 0 && y1 > 0 && x1 <= grid.length && y1 <= grid.length) {
+            if (x1 >= 0 && y1 >= 0 && x1 < grid.length && y1 < grid.length) {
                 if (!(grid[x1][y1]).equals(" "))  {
                     if ((grid[x1][y1]).equals("8")) {
                         System.out.println("ERORR - ship is already placed there!");
@@ -245,4 +351,6 @@ public class Background {
             }
         }
     }
+
+
 }
